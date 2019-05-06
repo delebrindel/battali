@@ -37,7 +37,7 @@
     },
     mounted() {
       this.hp = this.maxHp;
-      this.normalAttack();
+      this.rage = 0;
     },
     created() {
       CombatFlow.$on('attack', this.onAttacked);
@@ -49,13 +49,13 @@
         return Math.max(Math.floor(Math.random() * max + 1), min);
       },
       onAttacked: function (type) {
-        if(type === "player" && this.char ==="player"){
+        if(this.char === type){
           this.normalAttack(type)
         }
       },
       onHeal: function(type){
         if(this.char === type){
-          let damage = this.calculateDamage(this.minHeal, this.maxHeal)*1.5;
+          let damage = Math.ceil(this.calculateDamage(this.minHeal, this.maxHeal)*1.5);
           if(this.hp + damage < this.maxHp){
             this.hp += damage;
           }
@@ -63,11 +63,12 @@
             damage = this.maxHp - this.hp;
             this.hp = this.maxHp;
           }
-            CombatFlow.$emit('add-to-log',{origin: 'player', message: `Player healed for ${damage} damage`})
-            damage = this.calculateDamage(this.minDamage, this.maxDamage);
-            CombatFlow.$emit('damage',['player', damage]);
+            this.addLog(type, "heal", ` healed for ${damage} damage`);
+            CombatFlow.$emit("attack","monster")
         }
-
+      },
+      addLog: function(source, type, message){
+        CombatFlow.$emit('add-to-log',{origin: source, action: type , message: message})
       },
       onDamaged: function (data) {
         let type = data[0];
@@ -88,13 +89,11 @@
           else{
             this.hp = 0;
           }
+          let origin = type === "monster" ? "player" : "monster";
+          this.addLog(origin, "attack", ` attacked ${type}, dealing ${damage} damage`);
           if(type === "monster"){
-            CombatFlow.$emit('add-to-log',{origin: 'player', message: `Player attacked monster, dealing ${damage} damage`})
             damage = this.calculateDamage(this.minDamage, this.maxDamage);
             CombatFlow.$emit('damage',['player', damage])
-          }
-          else{
-            CombatFlow.$emit('add-to-log',{origin: 'monster', message: `Monster attacked player, dealing ${damage} damage`})
           }
         }
       },
@@ -102,14 +101,16 @@
         var damage = this.calculateDamage(this.minDamage, this.maxDamage)*1.5;
         if(type === this.char && this.char ==="player"){
           CombatFlow.$emit('heal', ['player', damage]);
+          CombatFlow.$emit('attack', 'monster');
         }
       },
       normalAttack: function(type){
-        var damage = this.calculateDamage(this.minDamage, this.maxDamage);
         if(type === "player" && this.char ==="player"){
+          var damage = this.calculateDamage(this.minDamage, this.maxDamage);
           CombatFlow.$emit('damage', ['monster', damage]);
         }
         else if(type === "monster" && this.char ==="monster"){
+          damage = this.calculateDamage(this.minDamage, this.maxDamage);
           CombatFlow.$emit('damage', ['player', damage]);
         }
       }

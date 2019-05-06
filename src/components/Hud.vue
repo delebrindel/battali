@@ -3,23 +3,33 @@
     <div class="hud-inner--icons">
       <div class="hud-inner--icons--attack hud-icon" @click="attack">
         <span>Attack</span>
-        <img src="@/assets/icons/hud/attack.svg" />
+        <img src="@/assets/icons/hud/player/attack.svg" />
       </div>
       <div class="hud-inner--icons--heal hud-icon" @click="heal">
         <span>Heal</span>
-        <img src="@/assets/icons/hud/remedy.svg" />
+        <img src="@/assets/icons/hud/player/remedy.svg" />
       </div>
       <div class="hud-inner--icons--special hud-icon" :class="{'hud-icon--disabled' : rage != 100}">
         <span>Special</span>
-        <img src="@/assets/icons/hud/ember.svg" />
+        <img src="@/assets/icons/hud/player/ember.svg" />
       </div>
       <div class="hud-inner--icons--run hud-icon">
         <span>Escape</span>
-        <img src="@/assets/icons/hud/run.svg" />
+        <img src="@/assets/icons/hud/player/run.svg" />
       </div>
     </div>
     <div class="hud-inner--logs">
       <div v-for="(log, index) in logs" :key="index" :class="'hud-inner--logs--'+log.origin">
+        <template v-if="log.origin == 'player'">
+          <img src="@/assets/icons/hud/player.svg" alt="Player:">
+          <img src="@/assets/icons/hud/player/heal.svg" v-if="log.action === 'heal'" alt="heal">
+          <img src="@/assets/icons/hud/player/slash.svg" v-if="log.action === 'attack'" alt="attack">
+        </template>
+        <template v-else>
+        <img src="@/assets/icons/hud/monster.svg" alt="Monster:">
+          <img src="@/assets/icons/hud/monster/heal.svg" v-if="log.action === 'heal'" alt="heal">
+          <img src="@/assets/icons/hud/monster/claw.svg" v-if="log.action === 'attack'" alt="attack">
+        </template>
         {{log.message}}
       </div>
     </div>
@@ -88,6 +98,11 @@
     line-height: 1.5rem;
     display: flex;
     flex-direction: column-reverse;
+    img{
+      width: 36px;
+      max-width: 20%;
+      display: inline-block;
+    }
   }
   .hud-inner--logs--player{
     color: $player-color--text;
