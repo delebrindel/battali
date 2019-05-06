@@ -24,11 +24,13 @@
           <img src="@/assets/icons/hud/player.svg" alt="Player:">
           <img src="@/assets/icons/hud/player/heal.svg" v-if="log.action === 'heal'" alt="heal">
           <img src="@/assets/icons/hud/player/slash.svg" v-if="log.action === 'attack'" alt="attack">
+          <img src="@/assets/icons/hud/player/special.svg" v-if="log.action === 'special'" alt="special attack">
         </template>
         <template v-else>
         <img src="@/assets/icons/hud/monster.svg" alt="Monster:">
           <img src="@/assets/icons/hud/monster/heal.svg" v-if="log.action === 'heal'" alt="heal">
           <img src="@/assets/icons/hud/monster/claw.svg" v-if="log.action === 'attack'" alt="attack">
+          <img src="@/assets/icons/hud/monster/special.svg" v-if="log.action === 'special'" alt="special attack">
         </template>
         {{log.message}}
       </div>
