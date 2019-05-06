@@ -1,20 +1,20 @@
 <template>
     <div id="hud-inner">
       <div class="hud-inner--icons">
-        <div class="hud-inner--icons--attack hud-icon">
-          Attack
+        <div class="hud-inner--icons--attack hud-icon" @click="attack">
+          <span>Attack</span>
           <img src="@/assets/icons/hud/attack.svg"/>
         </div>
         <div class="hud-inner--icons--heal hud-icon">
-          Heal
+          <span>Heal</span>
           <img src="@/assets/icons/hud/remedy.svg"/>
         </div>
         <div class="hud-inner--icons--special hud-icon" :class="{'hud-icon--disabled' : rage != 100}">
-          Special attack
+          <span>Special</span>
           <img src="@/assets/icons/hud/ember.svg"/>
         </div>
         <div class="hud-inner--icons--run hud-icon">
-          Escape
+          <span>Escape</span>
           <img src="@/assets/icons/hud/run.svg"/>
         </div>
       </div>
@@ -22,11 +22,19 @@
 </template>
 
 <script>
+  import {
+    CombatFlow
+  } from "../main.js";
 export default {
   name: 'Hud',
   data:()=>{
     return{
       rage: 0
+    }
+  },
+  methods:{
+    attack: function(){
+        CombatFlow.$emit('attack', 'player');
     }
   }
 }
@@ -38,12 +46,13 @@ export default {
   .hud-inner--icons {
     display: grid;
     grid-template-columns: 2fr repeat(4, 1fr) 2fr;
-    grid-gap: 10px;
-    grid-auto-rows: minmax(100px, auto);
     font-size: 1.5rem;
     text-align: center;
   }
   .hud-icon{
+    span{
+      display: block;
+    }
     img{
       margin: 0.25rem auto;
       display: block;

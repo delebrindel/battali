@@ -1,8 +1,8 @@
 <template>
     <div>
       <div id="arena-inner">
-        <Character id="arena-inner--player" type="player" maxHp="100"/>
-        <Character id="arena-inner--monster" type="monster"  maxHp="150"/>
+        <Character id="arena-inner--player" char="player" :maxHp="120" :maxRage="100" :minDamage="3" :maxDamage="10" :minHeal="8" :maxHeal="14"/>
+        <Character id="arena-inner--monster" char="monster"  :maxHp="150" :maxRage="200" :minDamage="6" :maxDamage="13" :minHeal="0" :maxHeal="0"/>
       </div>
     </div>
 </template>
